@@ -1,103 +1,67 @@
 {% extends 'base.html' %}
-{% load static %}
 
 {% block title %}Kirish{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center align-items-center" style="min-height: 80vh;">
-    <div class="col-md-5 col-lg-4">
-        <div class="card border-0 shadow-lg rounded-4">
-            <div class="card-header bg-dark py-4 text-center border-0 rounded-top-4">
-                <div class="mb-2" style="font-size: 2.5rem;">🏠</div>
-                <h3 class="card-title text-white mb-0 fw-bold">Xush kelibsiz!</h3>
-                <p class="text-muted small mb-0">Tizimga kirish uchun ma'lumotlarni kiriting</p>
-            </div>
-
-            <div class="card-body p-4">
-                <form method="POST" novalidate>
+<div class="row justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="col-md-5">
+        <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="card-body p-5">
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold text-primary">Xush kelibsiz!</h2>
+                    <p class="text-muted">Profilingizga kirish uchun ma'lumotlarni kiriting</p>
+                </div>
+                
+                <form method="POST">
                     {% csrf_token %}
-                    
-                    {# Xatoliklar bo'lsa ko'rsatish (masalan: Login xato bo'lsa) #}
-                    {% if form.non_field_errors %}
-                        {% for error in form.non_field_errors %}
-                            <div class="alert alert-danger py-2 small">
-                                {{ error }}
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-
                     {% for field in form %}
-                        <div class="mb-3">
-                            <label for="{{ field.id_for_label }}" class="form-label fw-bold text-secondary small text-uppercase">
-                                {{ field.label }}
-                            </label>
-                            
-                            <div class="input-group">
-                                <span class="input-group-text bg-light border-end-0">
-                                    {% if field.name == 'username' %}👤
-                                    {% elif 'password' in field.name %}🔑
-                                    {% else %}📝{% endif %}
-                                </span>
-                                
-                                <input type="{{ field.field.widget.input_type|default:'text' }}" 
-                                       name="{{ field.name }}" 
-                                       id="{{ field.id_for_label }}"
-                                       class="form-control border-start-0 {% if field.errors %}is-invalid{% endif %}"
-                                       placeholder="{{ field.label }}ni kiriting...">
-                                
-                                {% if field.errors %}
-                                    <div class="invalid-feedback">
-                                        {{ field.errors|striptags }}
-                                    </div>
-                                {% endif %}
-                            </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-uppercase text-secondary">{{ field.label }}</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0">🔑</span>
+                            {{ field }}
                         </div>
+                        {% if field.errors %}
+                            <div class="text-danger small mt-1">{{ field.errors|striptags }}</div>
+                        {% endif %}
+                    </div>
                     {% endfor %}
 
                     <div class="d-grid gap-2 mt-4">
-                        <button type="submit" class="btn btn-dark btn-lg rounded-pill shadow-sm py-2">
-                            Kirish
+                        <button type="submit" class="btn btn-primary btn-lg rounded-3 fw-bold py-3 shadow-sm">
+                            Tizimga kirish
                         </button>
                     </div>
                 </form>
-            </div>
 
-            <div class="card-footer bg-light text-center py-3 border-0 rounded-bottom-4">
-                <p class="mb-0 small text-muted">
-                    Akkountingiz yo'qmi? 
-                    <a href="{% url 'register' %}" class="text-primary fw-bold text-decoration-none border-bottom border-primary border-2">
-                        Ro'yxatdan o'ting
-                    </a>
-                </p>
+                <div class="text-center mt-4">
+                    <p class="text-muted small">Accountingiz yo'qmi? 
+                        <a href="{% url 'register' %}" class="text-primary fw-bold text-decoration-none">Ro'yxatdan o'tish</a>
+                    </p>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <style>
-    /* Input dizaynini yumshoqroq qilish */
+    /* Django inputlarini chiroyli qilish */
+    input {
+        display: block;
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid #dee2e6;
+        border-left: none !important;
+        border-radius: 0 10px 10px 0 !important;
+    }
     .input-group-text {
-        color: #adb5bd;
+        border-radius: 10px 0 0 10px !important;
+        border-right: none;
     }
-    .form-control:focus {
-        box-shadow: none;
-        border-color: #dee2e6;
-        background-color: #fff;
-    }
-    .card {
-        transition: transform 0.3s ease;
-    }
-    .card:hover {
-        transform: translateY(-5px);
-    }
-    /* Rounded tops/bottoms for cards with bg-colors */
-    .rounded-top-4 {
-        border-top-left-radius: 1rem !important;
-        border-top-right-radius: 1rem !important;
-    }
-    .rounded-bottom-4 {
-        border-bottom-left-radius: 1rem !important;
-        border-bottom-right-radius: 1rem !important;
+    input:focus {
+        outline: none;
+        border-color: #0d6efd !important;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1);
     }
 </style>
 {% endblock %}

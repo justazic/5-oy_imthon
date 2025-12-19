@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from django.contrib.auth import login, logout, authenticate
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import login, logout, update_session_auth_hash
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib import messages
 from .forms import UserRegisterForm, UserUpdateForm
 
@@ -47,7 +47,6 @@ class ProfileView(View):
     def get(self,request):
         if not request.user.is_authenticated:
             return redirect('login')
-        
         form = UserUpdateForm(instance=request.user)
         return render(request, 'users/profile.html', {'form': form})
     
@@ -60,4 +59,22 @@ class ProfileView(View):
             messages.success(request, 'Profil Yangilandi!')
             return redirect('profile')
         return render(request, 'users/profile.html', {'form': form})
+
+
+class ChangePaswordView(View):
+    def get(self,request):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        form = PasswordChangeForm(user=request.user)
+        return render(request, 'users/change_pass.html', {'form':form})
     
+    def post(self,request):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        form = PasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            user = form.save() 
+            update_session_auth_hash(request, user)
+            messages.success(request, 'Parol muvafaqiyatli ozgartirildi')
+            return redirect('profile')
+        return render(request, 'users/change_pass.html', {'form':form})

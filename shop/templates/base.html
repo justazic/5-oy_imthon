@@ -15,20 +15,15 @@
             font-weight: bold;
             font-size: 1.5rem;
         }
-        .product-card {
-            transition: all 0.3s ease;
-            height: 100%;
-        }
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
-        .product-img {
-            height: 200px;
+        .user-avatar-nav {
+            width: 30px;
+            height: 30px;
             object-fit: cover;
+            border-radius: 50%;
+            margin-right: 8px;
         }
-        footer {
-            margin-top: 50px;
+        .nav-link.dropdown-toggle {
+            color: white !important;
         }
         .messages {
             position: fixed;
@@ -37,16 +32,8 @@
             z-index: 1000;
             min-width: 250px;
         }
-        .user-avatar-nav {
-            width: 30px;
-            height: 30px;
-            object-fit: cover;
-            border-radius: 50%;
-            margin-right: 8px;
-        }
-        /* Dropdown rangini oq qilish uchun */
-        .nav-link.dropdown-toggle {
-            color: white !important;
+        footer {
+            margin-top: 50px;
         }
     </style>
 </head>
@@ -55,7 +42,7 @@
         <div class="container">
             <a class="navbar-brand" href="{% url 'home' %}">🏠 MebelDo'kon</a>
             
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             
@@ -65,10 +52,10 @@
                         <a class="nav-link" href="{% url 'home' %}">Bosh sahifa</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
                             Kategoriyalar
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{% url 'home' %}">Barcha mahsulotlar</a></li>
                             <li><hr class="dropdown-divider"></li>
                             {% for cat in categories %}
@@ -86,15 +73,14 @@
                 <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item me-3">
                         <form class="d-flex" action="{% url 'home' %}" method="get">
-                            <input class="form-control form-control-sm me-2" type="search" name="q" 
-                                   placeholder="Qidirish..." value="{{ request.GET.q|default:'' }}">
+                            <input class="form-control form-control-sm me-2" type="search" name="q" placeholder="Qidirish..." value="{{ request.GET.q|default:'' }}">
                             <button class="btn btn-outline-light btn-sm" type="submit">🔍</button>
                         </form>
                     </li>
 
                     {% if user.is_authenticated %}
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" data-bs-toggle="dropdown">
                                 {% if user.image %}
                                     <img src="{{ user.image.url }}" class="user-avatar-nav">
                                 {% else %}
@@ -102,7 +88,7 @@
                                 {% endif %}
                                 {{ user.username }}
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <ul class="dropdown-menu dropdown-menu-end">
                                 <li><a class="dropdown-item" href="{% url 'profile' %}">👤 Profilim</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item text-danger" href="{% url 'logout' %}">Logout (Chiqish)</a></li>
@@ -126,18 +112,17 @@
         {% for message in messages %}
         <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow" role="alert">
             {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
         {% endfor %}
     </div>
     {% endif %}
 
     <main class="container mt-4" style="min-height: 70vh;">
-        {% block content %}
-        {% endblock %}
+        {% block content %}{% endblock %}
     </main>
 
-    <footer class="bg-dark text-white py-4 mt-5">
+    <footer class="bg-dark text-white py-4">
         <div class="container text-center">
             <p class="mb-1">&copy; 2024-2025 Mebel Do'koni. Barcha huquqlar himoyalangan.</p>
             <p class="small text-muted mb-0 text-white">Telefon: +998 90 123 45 67 | Email: info@mebelshop.uz</p>
@@ -145,18 +130,5 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <script>
-        // Xabarlarni 4 sekunddan so'ng avtomatik yashirish
-        document.addEventListener("DOMContentLoaded", function() {
-            setTimeout(function() {
-                let alerts = document.querySelectorAll('.alert');
-                alerts.forEach(function(alert) {
-                    let bsAlert = new bootstrap.Alert(alert);
-                    bsAlert.close();
-                });
-            }, 4000);
-        });
-    </script>
 </body>
 </html>
